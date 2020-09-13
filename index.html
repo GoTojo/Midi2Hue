@@ -1,0 +1,99 @@
+<!DOCTYPE html> 
+<html lang="jp"> 	
+<head> 		
+<meta charset="utf-8"> 		
+<title>MIDI2HUE</title> 		
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src='js/mididevice.js'></script>
+<script type="text/javascript">
+	var ctx;
+	var osc;
+	var fSound = false;
+	function OnButtonClick() {
+		ctx = new AudioContext();		
+	}
+</script>
+<script type="text/javascript">
+	function onMIDIMessage(event) {
+		console.log(event.data);
+		var status = event.data[0];
+		if (status != 0x90 && status != 0x80) {
+			return;
+		}
+		let note = event.data[1];
+		var velocity = event.data[1];
+		let noteon = (status == 0x90) && (velocity != 0);
+		if (noteon) {
+			console.log('note on');
+			if (fSound) osc.stop();
+			let oct = Math.floor(note/12)-5;
+			let key = note%12+9-5;
+			console.log('oct:'+oct+' key:'+key);
+			let freq = 440*Math.pow(2,oct)*Math.pow(Math.pow(2,1/12), key);
+			osc=ctx.createOscillator();
+			osc.connect(ctx.destination);
+			osc.frequency.value = freq;
+			osc.start();
+			fSound = true;
+		} else {
+			console.log('note off');
+			if (fSound) osc.stop();
+		}
+		var minnote = 48;
+		let offset = note - minnote;
+		var tbl = [
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'none',
+			'3F',
+			'1F',
+			'none',
+			'3E',
+			'none',
+			'3C',
+			'04',
+			'none',
+			'34',
+			'none',
+			'24',
+			'none',
+			'14',
+		];
+		var image;
+		if (offset < 0 || offset >= tbl.length) {
+			image = 'none';
+		} else {
+			image = tbl[offset];
+		}
+		$("#hue").attr('src','./images/'+image+'.png');
+	}
+</script>
+</head>
+<body>
+	<!-- <h2>Midi2Hue</h2> -->
+	<!-- <label>MIDI In</label> -->
+<!-- 	<select id="midiInputSelect" onchange="selectMidiInput()">
+		<option value="1">select input port</option>
+	</select>
+ -->
+ 	<p>
+		<img id="hue" src="./images/none.png">
+	</p>
+		 <input type="button" value="Start Audio" onclick="OnButtonClick();">
+	<p>
+	</p>
+	<script  type="text/javascript">
+		midiAccess = navigator.requestMIDIAccess({
+			sysex : true
+		}).then(onMIDISuccess, onMIDIFailure);
+	</script>
+</body>
+</html>
