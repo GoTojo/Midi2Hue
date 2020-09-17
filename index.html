@@ -21,13 +21,14 @@
 			return;
 		}
 		let note = event.data[1];
-		var velocity = event.data[1];
+		var velocity = event.data[2];
+		console.log('note:'+note+' velo:'+velocity);
 		let noteon = (status == 0x90) && (velocity != 0);
 		if (noteon) {
 			console.log('note on');
 			if (fSound) osc.stop();
 			let oct = Math.floor(note/12)-5;
-			let key = note%12+9-5;
+			let key = note%12+9-7;
 			console.log('oct:'+oct+' key:'+key);
 			let freq = 440*Math.pow(2,oct)*Math.pow(Math.pow(2,1/12), key);
 			osc=ctx.createOscillator();
@@ -80,10 +81,10 @@
 <body>
 	<!-- <h2>Midi2Hue</h2> -->
 	<!-- <label>MIDI In</label> -->
-<!-- 	<select id="midiInputSelect" onchange="selectMidiInput()">
+	<select id="midiInputSelect" onchange="selectMidiInput()">
 		<option value="1">select input port</option>
 	</select>
- -->
+
  	<p>
 		<img id="hue" src="./images/none.png">
 	</p>

@@ -20,14 +20,14 @@ function listInputsAndOutputs(access) {
         // }
 	}
 
-	// for (var i = 0; i < inputs.length; i++) {
-		// var option = document.createElement("option");
+	for (var i = 0; i < inputs.length; i++) {
+		var option = document.createElement("option");
 
-		// option.setAttribute("value", "midiInput");
-		// option.appendChild(document.createTextNode(inputs[i].name));
-		// document.getElementById("midiInputSelect").appendChild(option);
-		//console.log('input['+i+']:'+inputs[i].name);
-	// }
+		option.setAttribute("value", "midiInput");
+		option.appendChild(document.createTextNode(inputs[i].name));
+		document.getElementById("midiInputSelect").appendChild(option);
+		console.log('input['+i+']:'+inputs[i].name);
+	}
 
 	// for (var i = 0; i < outputs.length; i++) {
 	// 	var option = document.createElement("option");
@@ -42,7 +42,7 @@ function onMIDISuccess(access) {
 	midiAccess = access;
 	//console.log("midi ready!");
 	listInputsAndOutputs(access);
-	select1stMidiInput();
+	// select1stMidiInput();
 };
 
 function onMIDIFailure(msg) {
