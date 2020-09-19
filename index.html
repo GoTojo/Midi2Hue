@@ -14,6 +14,11 @@
 	}
 </script>
 <script type="text/javascript">
+	function createNewHue(image) {
+		var hue = $('<img>', { src: './images/'+image+'.png' });
+		$('body').append($('<p>'));
+		$('body').append(hue);
+	}
 	function onMIDIMessage(event) {
 		console.log(event.data);
 		var status = event.data[0];
@@ -75,6 +80,7 @@
 			image = tbl[offset];
 		}
 		$("#hue").attr('src','./images/'+image+'.png');
+		createNewHue(image);
 	}
 </script>
 </head>
