@@ -28,23 +28,6 @@
 		let note = event.data[1];
 		var velocity = event.data[2];
 		console.log('note:'+note+' velo:'+velocity);
-		let noteon = (status == 0x90) && (velocity != 0);
-		if (noteon) {
-			console.log('note on');
-			if (fSound) osc.stop();
-			let oct = Math.floor(note/12)-5;
-			let key = note%12+9-7;
-			console.log('oct:'+oct+' key:'+key);
-			let freq = 440*Math.pow(2,oct)*Math.pow(Math.pow(2,1/12), key);
-			osc=ctx.createOscillator();
-			osc.connect(ctx.destination);
-			osc.frequency.value = freq;
-			osc.start();
-			fSound = true;
-		} else {
-			console.log('note off');
-			if (fSound) osc.stop();
-		}
 		var minnote = 48;
 		let offset = note - minnote;
 		var tbl = [
@@ -79,8 +62,25 @@
 		} else {
 			image = tbl[offset];
 		}
-		$("#hue").attr('src','./images/'+image+'.png');
-		createNewHue(image);
+		let noteon = (status == 0x90) && (velocity != 0);
+		if (noteon) {
+			console.log('note on');
+			if (fSound) osc.stop();
+			let oct = Math.floor(note/12)-5;
+			let key = note%12+9-7;
+			console.log('oct:'+oct+' key:'+key);
+			let freq = 440*Math.pow(2,oct)*Math.pow(Math.pow(2,1/12), key);
+			osc=ctx.createOscillator();
+			osc.connect(ctx.destination);
+			osc.frequency.value = freq;
+			osc.start();
+			fSound = true;
+			$("#hue").attr('src','./images/'+image+'.png');
+			createNewHue(image);
+		} else {
+			console.log('note off');
+			if (fSound) osc.stop();
+		}
 	}
 </script>
 </head>
